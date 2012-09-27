@@ -9,7 +9,7 @@ Class CHiEditControl extends CControl
 	TextChanged := new EventHandler()
 
 	static MODULEID := 0
-	static DllPath := "C:\Dokumente und Einstellungen\___\Desktop\CGUI\HiEdit.dll"
+	static DllPath := "HiEdit.dll"
 
 	__New(Name, Options, Text, GUINum)
 	{
