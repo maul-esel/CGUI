@@ -70,6 +70,10 @@ Class CHiEditControl extends CControl
 		{
 			SendMessage, WM_SETTEXT, 0, &value,, % "ahk_id " this.hwnd
 		}
+		else if (name = "keywordfile")
+		{
+			DllCall("HiEdit\SetKeywordFile", "astr", value)
+		}
 	}
 }
 /*
