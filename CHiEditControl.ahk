@@ -58,6 +58,8 @@ Class CHiEditControl extends CControl
 		this._.Insert("Messages", {0x200 : "KillFocus", 0x100 : "SetFocus" }) ;Used for automatically registering message callbacks
 		; ========================================
 
+		this.Insert("Colors", new CHiEditControl.CHiEditColors(hCtrl))
+
 		this.hwnd := hCtrl
 		, this.Text := Text
 		return hCtrl
@@ -113,7 +115,7 @@ Class CHiEditControl extends CControl
 
 	__Set(name, value)
 	{
-		static WM_SETTEXT := 0x000C, HEM_SETCURRENTFILE := 2033, HEM_SETCOLORS := 2037
+		static WM_SETTEXT := 0x000C, HEM_SETCURRENTFILE := 2033
 
 		if (name = "text")
 		{
@@ -129,17 +131,11 @@ Class CHiEditControl extends CControl
 		}
 		else if (name = "colors")
 		{
-			VarSetCapacity(COLORS, 36, 0)
-			, NumPut(value["Text"],				COLORS, 00)	;NormalTextColor
-			, NumPut(value["Back"],				COLORS, 04) ;EditorBkColor
-			, NumPut(value["SelText"],			COLORS, 08) ;SelectionForeColor
-			, NumPut(value["ActSelBack"],		COLORS, 12)	;ActiveSelectionBkColor
-			, NumPut(value["InSelBack"],		COLORS, 16)	;InactiveSelectionBkColor
-			, NumPut(value["LineNumber"],		COLORS, 20)	;LineNumberColor
-			, NumPut(value["SelBarBack"],		COLORS, 24)	;SelBarBkColor
-			, NumPut(value["NonPrintableBack"],	COLORS, 28)	;NonPrintableBackColor
-			, NumPut(value["Number"],			COLORS, 32)	;NumberColor
-			SendMessage,HEM_SETCOLORS, &COLORS, true,,% "ahk_id " this.hwnd
+			this.colors._.update_ctrl := false
+			for clr_name, clr in value
+				this.colors[clr_name] := clr
+			this.colors._.update_ctrl := true
+			, this.colors._update()
 		}
 	}
 
@@ -188,6 +184,9 @@ Class CHiEditControl extends CControl
 		SendMessage, HEM_GETFILENAME, &fileName, index,, % "ahk_id " this.hwnd
 		return A_IsUnicode ? StrGet(&fileName, "CP0") : fileName
 	}
+
+
+	#include CHiEditColors.ahk
 }
 /*
 Group: About
