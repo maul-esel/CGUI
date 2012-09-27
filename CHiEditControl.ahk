@@ -57,7 +57,19 @@ Class CHiEditControl extends CControl
 		this._.Insert("Messages", {0x200 : "KillFocus", 0x100 : "SetFocus" }) ;Used for automatically registering message callbacks
 		; ========================================
 
+		this.hwnd := hCtrl
+		this.Text := Text
 		return hCtrl
+	}
+
+	__Set(name, value)
+	{
+		static WM_SETTEXT := 0x000C
+
+		if (name = "text")
+		{
+			SendMessage, WM_SETTEXT, 0, &value,, % "ahk_id " this.hwnd
+		}
 	}
 }
 /*
