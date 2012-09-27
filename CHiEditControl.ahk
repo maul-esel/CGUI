@@ -113,7 +113,7 @@ Class CHiEditControl extends CControl
 
 	__Set(name, value)
 	{
-		static WM_SETTEXT := 0x000C, HEM_SETCURRENTFILE := 2033
+		static WM_SETTEXT := 0x000C, HEM_SETCURRENTFILE := 2033, HEM_SETCOLORS := 2037
 
 		if (name = "text")
 		{
@@ -126,6 +126,20 @@ Class CHiEditControl extends CControl
 		else if (name = "currentfile")
 		{
 			SendMessage, HEM_SETCURRENTFILE, 0, value,, % "ahk_id " this.hwnd
+		}
+		else if (name = "colors")
+		{
+			VarSetCapacity(COLORS, 36, 0)
+			, NumPut(value["Text"],				COLORS, 00)	;NormalTextColor
+			, NumPut(value["Back"],				COLORS, 04) ;EditorBkColor
+			, NumPut(value["SelText"],			COLORS, 08) ;SelectionForeColor
+			, NumPut(value["ActSelBack"],		COLORS, 12)	;ActiveSelectionBkColor
+			, NumPut(value["InSelBack"],		COLORS, 16)	;InactiveSelectionBkColor
+			, NumPut(value["LineNumber"],		COLORS, 20)	;LineNumberColor
+			, NumPut(value["SelBarBack"],		COLORS, 24)	;SelBarBkColor
+			, NumPut(value["NonPrintableBack"],	COLORS, 28)	;NonPrintableBackColor
+			, NumPut(value["Number"],			COLORS, 32)	;NumberColor
+			SendMessage,HEM_SETCOLORS, &COLORS, true,,% "ahk_id " this.hwnd
 		}
 	}
 
