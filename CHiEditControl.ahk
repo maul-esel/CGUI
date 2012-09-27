@@ -65,7 +65,7 @@ Class CHiEditControl extends CControl
 
 	__Get(name)
 	{
-		static WM_GETTEXT := 0x000D
+		static WM_GETTEXT := 0x000D, HEM_GETCURRENTFILE := 2032, HEM_GETFILECOUNT := 2029
 
 		if (name = "text")
 		{
@@ -74,11 +74,25 @@ Class CHiEditControl extends CControl
 			VarSetCapacity(buffer, -1)
 			return buffer
 		}
+		else if (name = "currentfile")
+		{
+			SendMessage, HEM_GETCURRENTFILE,,,, % "ahk_id " this.hwnd
+			return Errorlevel
+		}
+		else if (name = "filecount")
+		{
+			SendMessage, HEM_GETFILECOUNT,,,, % "ahk_id " this.hwnd
+			return Errorlevel
+		}
+		else if (name = "currentfilename")
+		{
+			return this.GetFileName()
+		}
 	}
 
 	__Set(name, value)
 	{
-		static WM_SETTEXT := 0x000C
+		static WM_SETTEXT := 0x000C, HEM_SETCURRENTFILE := 2033
 
 		if (name = "text")
 		{
@@ -88,6 +102,56 @@ Class CHiEditControl extends CControl
 		{
 			DllCall("HiEdit\SetKeywordFile", "astr", value)
 		}
+		else if (name = "currentfile")
+		{
+			SendMessage, HEM_SETCURRENTFILE, 0, value,, % "ahk_id " this.hwnd
+		}
+	}
+
+	NewFile()
+	{
+		static HEM_NEWFILE := 2024
+		SendMessage, HEM_NEWFILE, 0, 0,, % "ahk_id " this.hwnd
+	}
+
+	OpenFile(path, create = false)
+	{
+		static HEM_OPENFILE := 2025
+		return DllCall("SendMessage", "Ptr", this.hwnd, "UInt", HEM_OPENFILE, "Ptr", create, "AStr", path, "Ptr")
+	}
+
+	CloseFile(index = -1)
+	{
+		static HEM_CLOSEFILE := 2026
+		SendMessage, HEM_CLOSEFILE, 0, index,, % "ahk_id " this.hwnd
+		return errorlevel
+	}
+
+	ShowFileList(x = 0, y = 0)
+	{
+		static HEM_SHOWFILELIST := 2044
+		SendMessage, HEM_SHOWFILELIST, x, y,, % "ahk_id " this.hwnd
+	}
+
+	ReloadFile(index = -1)
+	{
+		static HEM_RELOADFILE := 2027
+		SendMessage, HEM_RELOADFILE, 0, index,, % "ahk_id " this.hwnd
+		Return ErrorLevel
+	}
+
+	SaveFile(path, index = -1)
+	{
+		static HEM_SAVEFILE := 2028
+		return DllCall("SendMessage", "Ptr", this.hwnd, "UInt", HEM_SAVEFILE, "AStr", path, "Ptr", index, "Ptr")
+	}
+
+	GetFileName(index = -1)
+	{
+		static HEM_GETFILENAME := 2030
+		VarSetCapacity(fileName, 512)
+		SendMessage, HEM_GETFILENAME, &fileName, index,, % "ahk_id " this.hwnd
+		return A_IsUnicode ? StrGet(&fileName, "CP0") : fileName
 	}
 }
 /*
