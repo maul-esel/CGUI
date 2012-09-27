@@ -10,12 +10,8 @@ class CHiEditColors
 		SetFormat, Integer, Hex
 		if color is not Integer
 		{
-			MsgBox %color%
 			color := CHiEditControl.CHiEditColors._colors[color]
 		}
-
-		MsgBox % color + 0
-		SetFormat Integer, D
 
 		this._.colors[name] := color
 		if (this._.update_ctrl)
