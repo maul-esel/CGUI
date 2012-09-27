@@ -63,30 +63,51 @@ Class CHiEditControl extends CControl
 		return hCtrl
 	}
 
-	__Get(name)
+	__Get(params*)
 	{
-		static WM_GETTEXT := 0x000D, HEM_GETCURRENTFILE := 2032, HEM_GETFILECOUNT := 2029
+		static WM_GETTEXT := 0x000D, HEM_GETCURRENTFILE := 2032, HEM_GETFILECOUNT := 2029, EM_GETTEXTRANGE := 1099, WM_GETTEXTLENGTH := 14
 
-		if (name = "text")
+		name := params[1], param_count := params.maxIndex()
+		if (param_count == 1)
 		{
-			VarSetCapacity(buffer, (char_count := 1024) * (A_IsUnicode ? 2 : 1), 0)
-			SendMessage, WM_GETTEXT, char_count, &buffer,, % "ahk_id " this.hwnd
-			VarSetCapacity(buffer, -1)
-			return buffer
+			if (name = "text")
+			{
+				VarSetCapacity(buffer, (char_count := 1024) * (A_IsUnicode ? 2 : 1), 0)
+				SendMessage, WM_GETTEXT, char_count, &buffer,, % "ahk_id " this.hwnd
+				VarSetCapacity(buffer, -1)
+				return buffer
+			}
+			else if (name = "currentfile")
+			{
+				SendMessage, HEM_GETCURRENTFILE,,,, % "ahk_id " this.hwnd
+				return Errorlevel
+			}
+			else if (name = "filecount")
+			{
+				SendMessage, HEM_GETFILECOUNT,,,, % "ahk_id " this.hwnd
+				return Errorlevel
+			}
+			else if (name = "currentfilename")
+			{
+				return this.GetFileName()
+			}
+			else if (name = "textlength")
+			{
+				SendMessage, WM_GETTEXTLENGTH, 0, 0,, % "ahk_id " this.hwnd
+				return ErrorLevel
+			}
 		}
-		else if (name = "currentfile")
+		else if (param_count == 3)
 		{
-			SendMessage, HEM_GETCURRENTFILE,,,, % "ahk_id " this.hwnd
-			return Errorlevel
-		}
-		else if (name = "filecount")
-		{
-			SendMessage, HEM_GETFILECOUNT,,,, % "ahk_id " this.hwnd
-			return Errorlevel
-		}
-		else if (name = "currentfilename")
-		{
-			return this.GetFileName()
+			if (name = "textrange")
+			{
+				lower := params[2], upper := params[3]
+				, VarSetCapacity(buf, upper-lower+2)
+				, VarSetCapacity(RNG, 12), NumPut(lower, RNG), NumPut(upper, RNG, 4), NumPut(&buf, RNG, 8)
+				SendMessage, EM_GETTEXTRANGE, 0, &RNG,, % "ahk_id " this.hwnd
+				VarSetCapacity(buf, -1)
+				Return A_IsUnicode ? StrGet(&buf, "CP0") : buf
+			}
 		}
 	}
 
