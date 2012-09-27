@@ -63,6 +63,19 @@ Class CHiEditControl extends CControl
 		return hCtrl
 	}
 
+	__Get(name)
+	{
+		static WM_GETTEXT := 0x000D
+
+		if (name = "text")
+		{
+			VarSetCapacity(buffer, (char_count := 1024) * (A_IsUnicode ? 2 : 1), 0)
+			SendMessage, WM_GETTEXT, char_count, &buffer,, % "ahk_id " this.hwnd
+			VarSetCapacity(buffer, -1)
+			return buffer
+		}
+	}
+
 	__Set(name, value)
 	{
 		static WM_SETTEXT := 0x000C
