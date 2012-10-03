@@ -119,7 +119,8 @@ Class CHiEditControl extends CControl
 
 	__Set(name, value)
 	{
-		static WM_SETTEXT := 0x000C, HEM_SETCURRENTFILE := 2033
+		static WM_SETTEXT := 0x000C, HEM_SETCURRENTFILE := 2033, HEM_LINENUMBERSBAR := 2036
+		static LNB := { "show" : 1, "hide" : 0, "automaxsize" : 2, "autosize" : 4 }
 
 		if (name = "text")
 		{
@@ -140,6 +141,17 @@ Class CHiEditControl extends CControl
 				this.colors[clr_name] := clr
 			this.colors._.update_ctrl := true
 			, this.colors._update()
+		}
+		else if name in LineNumbersBarState,SelectionBarWidth,LineNumbersWidth
+		{
+			if (name = "LineNumbersBarState")
+			{
+				if value is not integer
+					value := LNB[value]
+			}
+			this._[name] := value
+			SendMessage, HEM_LINENUMBERSBAR, this._.LineNumbersBarState, this._.SelectionBarWidth << 16 | this._.LineNumbersWidth,, % "ahk_id " this.hwnd
+			return ErrorLevel ? "" : value
 		}
 	}
 
