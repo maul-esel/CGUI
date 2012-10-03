@@ -411,6 +411,8 @@ Class CControl ;Never created directly
     {
 		if(Name != "_" && !CGUI.GUIList[this.GUINum].IsDestroyed)
 		{
+			gui_hwnd := CGUI.GUIList[thisGUINum].Hwnd
+
 			;Fix completely weird __Set behavior. If one tries to assign a value to a sub item, it doesn't call __Get for each sub item but __Set with the subitems as parameters.
 			Value := Params.Remove()
 			if(Params.MaxIndex())
@@ -424,15 +426,27 @@ Class CControl ;Never created directly
 			Handled := true
 			if(Name = "Text")
 				GuiControl, % this.GUINum ":",% this.hwnd, %Value% ;Use GuiControl because of line endings
-			else if(Name = "x" || Name = "y" || Name = "width" || Name = "height")
+			else if (Name = "x")
 			{
-				Name := {x : "x", y : "y", width : "w", height : "h"}[Name]
-				GuiControl, % this.GUINum ":Move", % this.hwnd, % Name Value
+				this.ClientToWindow(gui_hwnd, Value, "")
+				ControlMove,, Value,,,, % "ahk_id " this.hwnd
 			}
+			else if (Name = "y")
+			{
+				this.ClientToWindow(gui_hwnd, "", Value)
+				ControlMove,,, Value,,, % "ahk_id " this.hwnd
+			}
+			else if (Name = "width")
+				ControlMove,,,, Value,, % "ahk_id " this.hwnd
+			else if (Name = "height")
+				ControlMove,,,,, Value, % "ahk_id " this.hwnd
 			else if(Name = "Position")
-				GuiControl, % this.GUINum ":Move", % this.hwnd, % "x" Value.x " y" Value.y
+			{
+				this.ClientToWindow(gui_hwnd, x := Value.x, y := Value.y)
+				ControlMove,, x, y,,, % "ahk_id " this.hwnd
+			}
 			else if(Name = "Size")
-				GuiControl, % this.GUINum ":Move", % this.hwnd, % "w" Value.width " h" Value.height
+				ControlMove,,,, % Value.width, Value.height, % "ahk_id " this.hwnd
 			else if(Name = "Enabled" && Value)
 				this.Enable()
 			else if(Name = "Enabled" && !Value)
@@ -547,6 +561,32 @@ Class CControl ;Never created directly
 				return Value
 		}
     }
+
+	; private method to convert client-relative positions to window-relative ones
+	ClientToWindow(hwnd, byRef x = "", byRef y = "")
+	{
+		VarSetCapacity(pt, 8, 0)
+		, NumPut(x, pt, 0, "UInt")
+		, NumPut(y, pt, 4, "UInt")
+
+		if (!DllCall("ClientToScreen", "Ptr", hwnd, "Ptr", &pt, "UInt"))
+			return false
+
+		VarSetCapacity(rc, 16, 0)
+		if (!DllCall("GetWindowRect", "Ptr", hwnd, "Ptr", &rc, "UInt"))
+			return false
+
+		screen_x := NumGet(pt, 0, "UInt")
+		, screen_y := NumGet(pt, 4, "UInt")
+
+		win_x := NumGet(rc, 0, "UInt")
+		, win_y := NumGet(rc, 4, "UInt")
+
+		x := screen_x - win_x
+		, y := screen_y - win_y
+
+		return true
+	}
 	
 	/*
 	Event: Introduction
