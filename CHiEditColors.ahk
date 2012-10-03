@@ -16,6 +16,7 @@ class CHiEditColors
 		this._.colors[name] := color
 		if (this._.update_ctrl)
 			this._update()
+		return color
 	}
 
 	__Get(name)
