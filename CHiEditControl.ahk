@@ -6,6 +6,8 @@ This control extends <CControl>. All basic properties and functions are implemen
 */
 Class CHiEditControl extends CControl
 {
+	static registration := CGUI.RegisterControl("HiEdit", CHiEditControl)
+
 	TextChanged := new EventHandler()
 
 	static MODULEID := 0
