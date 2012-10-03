@@ -31,16 +31,11 @@ class CHiEditColors
 	{
 		static HEM_SETCOLORS := 2037
 
-		VarSetCapacity(COLORS, 36, 0)
-		, NumPut(this["Text"],				COLORS, 00)	;NormalTextColor
-		, NumPut(this["Back"],				COLORS, 04) ;EditorBkColor
-		, NumPut(this["SelText"],			COLORS, 08) ;SelectionForeColor
-		, NumPut(this["ActSelBack"],		COLORS, 12)	;ActiveSelectionBkColor
-		, NumPut(this["InSelBack"],			COLORS, 16)	;InactiveSelectionBkColor
-		, NumPut(this["LineNumber"],		COLORS, 20)	;LineNumberColor
-		, NumPut(this["SelBarBack"],		COLORS, 24)	;SelBarBkColor
-		, NumPut(this["NonPrintableBack"],	COLORS, 28)	;NonPrintableBackColor
-		, NumPut(this["Number"],			COLORS, 32)	;NumberColor
+		VarSetCapacity(COLORS, CHiEditControl.CHiEditColors._color_properties.maxIndex() * 4, 0)
+		for i, property in CHiEditControl.CHiEditColors._color_properties
+		{
+			NumPut(this[property], COLORS, (i - 1) * 4, "UInt")
+		}
 
 		SendMessage, HEM_SETCOLORS, &COLORS, true,,% "ahk_id " this._.hwnd
 	}
@@ -49,6 +44,8 @@ class CHiEditColors
 						, "maroon" : 0x000080, "red" : 0x0000FF, "purple" : 0x800080, "fuchsia" : 0xFF00FF
 						, "green" : 0x008000, "lime" : 0x00FF00, "olive" : 0x008080, "yellow" : 0x00FFFF
 						, "navy" : 0x800000, "blue" : 0xFF0000, "teal" : 0x808000, "aqua" : 0xFFFF00 }
+
+	static _color_properties := ["Text", "Back", "SelText", "ActSelBack", "InSelBack", "LineNumber", "SelBarBack", "NonPrintableBack", "Number"]
 
 	static _default_colors := { "Text" : 0x000000, "Back" : 0xFFFFFF, "SelText" : 0xFFFFFF
 							, "ActSelBack" : 0x0000FF, "InSelBack" : 0xBBBBBB, "LineNumber" : 0x000000
