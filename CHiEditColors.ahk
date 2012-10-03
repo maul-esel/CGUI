@@ -45,9 +45,9 @@ class CHiEditColors
 	}
 
 	static _colors := { "black" : 0x000000, "silver" : 0xC0C0C0, "gray" : 0x808080, "white" : 0xFFFFFF
-						, "maroon" : 0x800000, "red" : 0xFF0000, "purple" : 0x800080, "fuchsia" : 0xFF00FF
-						, "green" : 0x008000, "lime" : 0x00FF00, "olive" : 0x808000, "yellow" : 0xFF0000
-						, "navy" : 0x000080, "blue" : 0x0000FF, "teal" : 0x008080, "aqua" : 0x00FFFF }
+						, "maroon" : 0x000080, "red" : 0x0000FF, "purple" : 0x800080, "fuchsia" : 0xFF00FF
+						, "green" : 0x008000, "lime" : 0x00FF00, "olive" : 0x008080, "yellow" : 0x00FFFF
+						, "navy" : 0x800000, "blue" : 0xFF0000, "teal" : 0x808000, "aqua" : 0xFFFF00 }
 
 	static _default_colors := { "Text" : 0x000000, "Back" : 0xFFFFFF, "SelText" : 0xFFFFFF
 							, "ActSelBack" : 0x0000FF, "InSelBack" : 0xBBBBBB, "LineNumber" : 0x000000
