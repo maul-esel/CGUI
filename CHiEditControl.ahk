@@ -189,6 +189,20 @@ Class CHiEditControl extends CControl
 		return A_IsUnicode ? StrGet(&fileName, "CP0") : fileName
 	}
 
+	Redo()
+	{
+		static EM_REDO := 1108
+		SendMessage EM_REDO,,,, % "ahk_id " this.hwnd
+		return ErrorLevel
+	}
+
+	Undo()
+	{
+		static WM_UNDO := 772
+		SendMessage, WM_UNDO,,,, % "ahk_id " this.hwnd
+		return ErrorLevel
+	}
+
 
 	#include CHiEditColors.ahk
 	#include CHiEditFont.ahk
