@@ -62,6 +62,8 @@ Class CHiEditControl extends CControl
 
 		this.hwnd := hCtrl
 		, this.Text := Text
+		, this.Font := new CHiEditControl.CHiEditFont(hwnd)
+
 		return hCtrl
 	}
 
@@ -187,6 +189,7 @@ Class CHiEditControl extends CControl
 
 
 	#include CHiEditColors.ahk
+	#include CHiEditFont.ahk
 }
 /*
 Group: About
