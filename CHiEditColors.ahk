@@ -7,7 +7,6 @@ class CHiEditColors
 
 	__Set(name, color)
 	{
-		SetFormat, Integer, Hex
 		if color is not Integer
 		{
 			color := CHiEditControl.CHiEditColors._colors[color]
