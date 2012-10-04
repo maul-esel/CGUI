@@ -128,7 +128,7 @@ Class CHiEditControl extends CControl
 		}
 		else if (name = "keywordfile")
 		{
-			DllCall("HiEdit\SetKeywordFile", "astr", value)
+			DllCall(CHiEditControl.DllPath . "\SetKeywordFile", "AStr", value)
 		}
 		else if (name = "currentfile")
 		{
