@@ -102,6 +102,12 @@ Class CHiEditControl extends CControl
 				SendMessage, WM_GETTEXTLENGTH, 0, 0,, % "ahk_id " this.hwnd
 				return ErrorLevel
 			}
+			else if (name = "selection")
+			{
+				if (!this._.selection)
+					this._.selection := new CHiEditControl.CHiEditSelection(this.hwnd)
+				return this._.selection
+			}
 		}
 		else if (param_count == 3)
 		{
@@ -210,6 +216,7 @@ Class CHiEditControl extends CControl
 
 	#include CHiEditColors.ahk
 	#include CHiEditFont.ahk
+	#Include CHiEditSelection.ahk
 }
 /*
 Group: About
