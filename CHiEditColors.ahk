@@ -2,20 +2,25 @@ class CHiEditColors
 {
 	__New(hwnd)
 	{
-		this.Insert("_", { "colors" : CHiEditControl.CHiEditColors._default_colors.clone(), "update_ctrl" : true, "hwnd" : hwnd })
+		this.Insert("_", { "colors" : CHiEditControl.CHiEditColors._default_colors.clone(), "hwnd" : hwnd })
 	}
 
-	__Set(name, color)
+	__Set(params*)
 	{
-		if color is not Integer
+		names := params, colors := names.Remove()
+		if (!IsObject(colors))
+			colors:= [colors]
+
+		for i, name in names
 		{
-			color := CHiEditControl.CHiEditColors._colors[color]
+			color := colors[i]
+			if color is not Integer
+				color := CHiEditControl.CHiEditColors._colors[color]
+			this._.colors[name] := color
 		}
 
-		this._.colors[name] := color
-		if (this._.update_ctrl)
-			this._update()
-		return color
+		this._update()
+		return params.MaxIndex() == 2 ? color : colors
 	}
 
 	__Get(name)
