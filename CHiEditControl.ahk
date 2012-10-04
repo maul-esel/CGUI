@@ -134,14 +134,6 @@ Class CHiEditControl extends CControl
 		{
 			SendMessage, HEM_SETCURRENTFILE, 0, value,, % "ahk_id " this.hwnd
 		}
-		else if (name = "colors")
-		{
-			this.colors._.update_ctrl := false
-			for clr_name, clr in value
-				this.colors[clr_name] := clr
-			this.colors._.update_ctrl := true
-			, this.colors._update()
-		}
 		else if name in LineNumbersBarState,SelectionBarWidth,LineNumbersWidth
 		{
 			if (name = "LineNumbersBarState")
