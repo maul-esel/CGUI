@@ -29,7 +29,7 @@ class CHiEditFont
 		, weight	:= InStr(opt, "bold") ? 700 : 400
 
 		; height
-		RegExMatch(opt, "(?<=[S|s])(\d{1,2})(?=[ ,])", height)
+		RegExMatch(opt, "(?<=[S|s])(\d{1,2})(?=([ ,]|$))", height)
 		if (height = "")
 			height := 10
 		RegRead, LogPixels, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontDPI, LogPixels
